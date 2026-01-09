@@ -80,7 +80,6 @@ python test_excitement_ranker.py
 - `main.py`: **Unified application** - Start here! Main menu with both features
 - `excitement_ranker_improved.py`: Retrospective match analysis
 - `excitement_predictor.py`: Future match prediction
-- `excitement_ranker.py`: Original script (legacy)
 - `config.py`: Configuration management
 - `logger.py`: Logging utilities
 - `test_excitement_ranker.py`: Unit tests

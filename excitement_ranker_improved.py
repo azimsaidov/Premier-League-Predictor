@@ -2,8 +2,6 @@
 Enhanced Excitement Ranker for Premier League Matches
 Analyzes completed matches and ranks them by excitement level using multiple factors.
 """
-import os
-import sys
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
@@ -11,16 +9,8 @@ import pandas as pd
 import requests
 from tabulate import tabulate
 
-# Import our custom modules
 from config import Config
-from logger import setup_logging, get_logger
-
-# Load environment variables from .env file if it exists
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass  # dotenv is optional
+from logger import get_logger
 
 
 class ExcitementRanker:
@@ -289,38 +279,3 @@ class ExcitementRanker:
         except Exception as e:
             self.logger.error(f"Unexpected error: {e}")
             raise
-
-
-def main():
-    """Main entry point"""
-    # Set up logging
-    logger = setup_logging()
-    
-    try:
-        # Load configuration
-        config = Config.from_env()
-        config.validate()
-        
-        # Get user input
-        days_back_str = input("Enter number of DAYS BACK to check for COMPLETED matches (e.g., 7 for last week): ")
-        if not days_back_str.isdigit():
-            raise ValueError("Invalid input. Please enter a valid number of days.")
-        
-        days_back = int(days_back_str)
-        if days_back <= 0:
-            raise ValueError("Days back must be a positive number.")
-        
-        # Create ranker and run
-        ranker = ExcitementRanker(config)
-        ranker.run(days_back)
-        
-    except ValueError as e:
-        logger.error(f"Input error: {e}")
-        sys.exit(1)
-    except Exception as e:
-        logger.error(f"Application error: {e}")
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()

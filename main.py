@@ -2,23 +2,19 @@
 Premier League Excitement Analyzer - Unified Application
 Combines retrospective analysis and future predictions in one user-friendly interface.
 """
-import os
 import sys
-from datetime import datetime
 from typing import Optional
 
-# Import our custom modules
-from config import Config
-from logger import setup_logging, get_logger
-from excitement_ranker_improved import ExcitementRanker
-from excitement_predictor import ExcitementPredictor
-
-# Load environment variables from .env file if it exists
 try:
     from dotenv import load_dotenv
     load_dotenv()
 except ImportError:
-    pass  # dotenv is optional
+    pass
+
+from config import Config
+from logger import setup_logging, get_logger
+from excitement_ranker_improved import ExcitementRanker
+from excitement_predictor import ExcitementPredictor
 
 
 class PremierLeagueExcitementApp:
@@ -55,22 +51,25 @@ class PremierLeagueExcitementApp:
     
     def display_welcome(self):
         """Display welcome message and application info"""
-        print("\n" + "="*80)
+        print("\n" + "="*70)
         print("🏆 PREMIER LEAGUE EXCITEMENT ANALYZER 🏆")
-        print("="*80)
-        print("📊 Analyze past matches for excitement rankings")
-        print("🔮 Predict future matches for viewing recommendations")
-        print("⚽ Powered by Football Data API")
-        print("="*80)
+        print("="*70)
+        print("📊 Analyze past matches | 🔮 Predict future matches")
+        print("="*70)
     
     def display_main_menu(self):
         """Display the main menu options"""
         print("\n🎯 MAIN MENU:")
-        print("1. 📈 Analyze Past Matches (Retrospective Ranking)")
-        print("2. 🔮 Predict Future Matches (Excitement Prediction)")
-        print("3. ℹ️  About This Application")
+        print("1. 📈 Analyze Past Matches")
+        print("2. 🔮 Predict Future Matches")
+        print("3. ℹ️  About")
         print("4. ❌ Exit")
-        print("-" * 50)
+        print("-" * 40)
+    
+    def _handle_exit(self):
+        """Handle user exit (Ctrl+C or EOF)"""
+        print("\n👋 Goodbye!")
+        sys.exit(0)
     
     def get_user_choice(self) -> str:
         """Get user's menu choice with validation"""
@@ -79,29 +78,18 @@ class PremierLeagueExcitementApp:
                 choice = input("Enter your choice (1-4): ").strip()
                 if choice in ['1', '2', '3', '4']:
                     return choice
-                else:
-                    print("❌ Invalid choice. Please enter 1, 2, 3, or 4.")
-            except KeyboardInterrupt:
-                print("\n👋 Goodbye!")
-                sys.exit(0)
-            except EOFError:
-                print("\n👋 Goodbye!")
-                sys.exit(0)
+                print("❌ Invalid choice. Please enter 1, 2, 3, or 4.")
+            except (KeyboardInterrupt, EOFError):
+                self._handle_exit()
     
     def analyze_past_matches(self):
         """Handle past match analysis"""
         print("\n📈 ANALYZING PAST MATCHES")
         print("-" * 30)
-        print("This will rank completed Premier League matches by excitement level.")
-        print("The analysis considers:")
-        print("• Goal action and scoring")
-        print("• Match closeness and parity")
-        print("• Late drama and comebacks")
-        print("• League standings context")
         
         while True:
             try:
-                days_back_str = input("\nEnter number of DAYS BACK to analyze (e.g., 7 for last week): ")
+                days_back_str = input("Enter number of DAYS BACK to analyze (e.g., 7): ")
                 if not days_back_str.isdigit():
                     raise ValueError("Please enter a valid number.")
                 
@@ -115,9 +103,8 @@ class PremierLeagueExcitementApp:
                 
             except ValueError as e:
                 print(f"❌ {e}")
-            except KeyboardInterrupt:
-                print("\n👋 Goodbye!")
-                sys.exit(0)
+            except (KeyboardInterrupt, EOFError):
+                self._handle_exit()
         
         try:
             self.logger.info(f"Starting past match analysis for {days_back} days back")
@@ -135,16 +122,10 @@ class PremierLeagueExcitementApp:
         """Handle future match prediction"""
         print("\n🔮 PREDICTING FUTURE MATCHES")
         print("-" * 30)
-        print("This will predict excitement levels for upcoming Premier League matches.")
-        print("Predictions are based on:")
-        print("• Team form and league position")
-        print("• Historical scoring patterns")
-        print("• Home advantage factors")
-        print("• Same excitement algorithm as past analysis")
         
         while True:
             try:
-                days_ahead_str = input("\nEnter number of DAYS AHEAD to predict (e.g., 7 for next week): ")
+                days_ahead_str = input("Enter number of DAYS AHEAD to predict (e.g., 7): ")
                 if not days_ahead_str.isdigit():
                     raise ValueError("Please enter a valid number.")
                 
@@ -158,9 +139,8 @@ class PremierLeagueExcitementApp:
                 
             except ValueError as e:
                 print(f"❌ {e}")
-            except KeyboardInterrupt:
-                print("\n👋 Goodbye!")
-                sys.exit(0)
+            except (KeyboardInterrupt, EOFError):
+                self._handle_exit()
         
         try:
             self.logger.info(f"Starting future match prediction for {days_ahead} days ahead")
@@ -179,35 +159,13 @@ class PremierLeagueExcitementApp:
         print("\nℹ️  ABOUT THIS APPLICATION")
         print("-" * 30)
         print("🏆 Premier League Excitement Analyzer")
-        print("📅 Created: October 2025")
         print("⚽ Data Source: Football Data API")
-        print("")
-        print("🎯 FEATURES:")
+        print("\n🎯 FEATURES:")
         print("• Retrospective match analysis with excitement scoring")
         print("• Future match prediction using the same algorithm")
-        print("• Multi-factor scoring system:")
-        print("  - Goal Action (Weight: 4.0)")
-        print("  - Parity/Closeness (Weight: 3.0)")
-        print("  - Late Drama (Weight: 5.0)")
-        print("  - League Parity Factor (Weight: 2.0)")
-        print("")
-        print("🔧 TECHNICAL DETAILS:")
-        print("• Object-oriented Python design")
-        print("• Environment variable configuration")
-        print("• Professional logging system")
-        print("• Comprehensive error handling")
-        print("• Unit test coverage")
-        print("")
-        print("📊 SCORING EXPLANATION:")
-        print("• G = Goal Action: Total goals scored")
-        print("• P = Parity: How close the match was")
-        print("• D = Drama: Late comebacks and high-scoring draws")
-        print("• LPF = League Parity Factor: Upsets and competitive matchups")
-        print("")
-        print("🎮 HOW TO USE:")
-        print("1. Choose 'Analyze Past Matches' to rank completed games")
-        print("2. Choose 'Predict Future Matches' to see upcoming excitement")
-        print("3. Use the rankings to plan your viewing schedule!")
+        print("• Multi-factor scoring: Goal Action (4.0), Parity (3.0), Drama (5.0), LPF (2.0)")
+        print("\n📊 SCORING: G=Goals, P=Parity/Closeness, D=Drama/Comebacks, LPF=Upsets")
+        print("🎮 Use menu options 1-2 to analyze past or predict future matches")
         
         self.ask_continue()
     
@@ -216,20 +174,15 @@ class PremierLeagueExcitementApp:
         print("\n" + "-" * 50)
         while True:
             try:
-                choice = input("Would you like to return to the main menu? (y/n): ").strip().lower()
+                choice = input("Return to main menu? (y/n): ").strip().lower()
                 if choice in ['y', 'yes']:
                     return
                 elif choice in ['n', 'no']:
                     print("👋 Thank you for using Premier League Excitement Analyzer!")
                     sys.exit(0)
-                else:
-                    print("❌ Please enter 'y' for yes or 'n' for no.")
-            except KeyboardInterrupt:
-                print("\n👋 Goodbye!")
-                sys.exit(0)
-            except EOFError:
-                print("\n👋 Goodbye!")
-                sys.exit(0)
+                print("❌ Please enter 'y' for yes or 'n' for no.")
+            except (KeyboardInterrupt, EOFError):
+                self._handle_exit()
     
     def run(self):
         """Main application loop"""
@@ -257,9 +210,8 @@ class PremierLeagueExcitementApp:
                     print("👋 Thank you for using Premier League Excitement Analyzer!")
                     break
                     
-            except KeyboardInterrupt:
-                print("\n👋 Goodbye!")
-                break
+            except (KeyboardInterrupt, EOFError):
+                self._handle_exit()
             except Exception as e:
                 self.logger.error(f"Unexpected error in main loop: {e}")
                 print(f"❌ An unexpected error occurred: {e}")

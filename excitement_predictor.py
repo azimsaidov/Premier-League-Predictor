@@ -2,8 +2,6 @@
 Excitement Predictor for Premier League Matches
 Predicts excitement levels for upcoming matches using historical data and team analysis.
 """
-import os
-import sys
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
 
@@ -11,16 +9,8 @@ import pandas as pd
 import requests
 from tabulate import tabulate
 
-# Import our custom modules
 from config import Config
-from logger import setup_logging, get_logger
-
-# Load environment variables from .env file if it exists
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    pass  # dotenv is optional
+from logger import get_logger
 
 
 class ExcitementPredictor:
@@ -344,38 +334,3 @@ class ExcitementPredictor:
         except Exception as e:
             self.logger.error(f"Unexpected error: {e}")
             raise
-
-
-def main():
-    """Main entry point for predictions"""
-    # Set up logging
-    logger = setup_logging()
-    
-    try:
-        # Load configuration
-        config = Config.from_env()
-        config.validate()
-        
-        # Get user input
-        days_ahead_str = input("Enter number of DAYS AHEAD to predict excitement for (e.g., 7 for next week): ")
-        if not days_ahead_str.isdigit():
-            raise ValueError("Invalid input. Please enter a valid number of days.")
-        
-        days_ahead = int(days_ahead_str)
-        if days_ahead <= 0:
-            raise ValueError("Days ahead must be a positive number.")
-        
-        # Create predictor and run
-        predictor = ExcitementPredictor(config)
-        predictor.run(days_ahead)
-        
-    except ValueError as e:
-        logger.error(f"Input error: {e}")
-        sys.exit(1)
-    except Exception as e:
-        logger.error(f"Application error: {e}")
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
